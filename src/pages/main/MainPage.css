@@ -1,0 +1,20 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.main-room{
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+.main-room input{
+    padding: .3rem 1rem;
+}
+.main-room button{
+    cursor: pointer;
+    padding: .3rem 1rem;
+}

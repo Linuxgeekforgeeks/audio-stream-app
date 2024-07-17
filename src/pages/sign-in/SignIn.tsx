@@ -1,16 +1,21 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { StreamVideoClient } from "@stream-io/video-react-sdk";
 import "./SignIn.css";
 import * as yup from "yup";
 import { PEOPLES_IMAGES } from "../../avatars";
 import Cookies from "universal-cookie";
+import { useUser } from "../../user-context";
+import { useNavigate } from "react-router-dom";
 interface formValues {
   username: string;
   name: string;
 }
 function SignIn() {
   const cookies=new Cookies()
+  const navigate=useNavigate()
+  const {setClient,setUser}=useUser()
   const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
   const schema = yup.object().shape({
     username: yup
@@ -47,6 +52,14 @@ function SignIn() {
     }
     const responseData=await response.json()
     console.log(responseData)
+    const apiKey="zyuptytpu5kp"
+    const user:User={
+        id:username,
+        name,
+    }
+    const myClient=new StreamVideoClient({apiKey,user,token:responseData.token})
+setClient(myClient)
+setUser(user)
     const expires=new Date()
     expires.setDate( expires.getDate()+1)
     cookies.set("username",responseData.username,{
@@ -58,6 +71,7 @@ function SignIn() {
     cookies.set("token",responseData.token,{
         expires,
     })
+    navigate("/")
   };
   return (
     <div className="sign-in" onSubmit={handleSubmit(handleSignInForm)}>
